@@ -1,2 +1,2 @@
 # LinearRegression-BostonHousing
-In this project, I created a linear regression analysis of the Boston Housing Dataset with Python and scikit-learn.
+In this project, I created a linear regression analysis of the Boston Housing Dataset with Python.
