@@ -1,5 +1,34 @@
+import numpy as np
+from matplotlib import pyplot as plt
+from math import sqrt
 
+# import data from csv file
+data = np.genfromtxt('data/bostonhousing.csv', dtype=float, delimiter=',', names=True)
 
+# establish RM and MEDV as independent and dependent variables
+x_values = data['RM']
+y_values = data['MEDV']
+
+# find slopes and intercept to 
+slope = find_slope(x_values, y_values)
+intercept = find_intercept(x_values, y_values)
+
+# find predicted y values
+predicted_y_values = slope * x_values + intercept
+
+# plot scatterplot of original points
+plt.scatter(x_values, y_values, color='g')
+
+# plot linear regression model
+plt.plot(x_values, predicted_y_values, '-r', label='linear regression fit')
+
+# graph details, and display
+plt.title('Simple Linear Regression Fit of RM vs MEDV from the Boston Housing Dataset')
+plt.xlabel('RM', color='#1C2833')
+plt.ylabel('MEDV', color='#1C2833')
+plt.legend(loc='upper left')
+plt.grid()
+plt.show()
 
 # Finds the y-intercept given list of x-values and list of y-values
 # Parameter: x_values, a list; y_values, a list
@@ -23,10 +52,9 @@ def find_slope(x_values, y_values):
 # Return: returns the average of all of the numbers in values
 # Postcondition: Returned value must be a numeric value
 def find_stdev(values):
-    mean = find_mean(values)
-    s = 0
-    for value in values:
-        s += (value - mean) ** 2
+    vals = values - find_mean(values)
+    vals = vals ** 2
+    s = np.sum(vals)
     return sqrt(s / (len(values) - 1))
 
 # Finds the correlation coefficient r given list of x-values and list of y-values
@@ -35,15 +63,11 @@ def find_stdev(values):
 # Return: returns the correlation coefficient value
 # Postcondition: Returned value must be a numeric value
 def find_r(x_values, y_values):
-    x_mean = find_mean(x_values)
-    y_mean = find_mean(y_values)
-    numerator = 0
-    denominator_x = 0
-    denominator_y = 0
-    for i in range(len(x_values)):
-        numerator += (x_values[i] - x_mean) * (y_values[i] - y_mean)
-        denominator_x += (x_values[i] - x_mean) ** 2
-        denominator_y += (y_values[i] - y_mean) ** 2
+    x_vals = x_values - find_mean(x_values)
+    y_vals = y_values - find_mean(y_values)
+    numerator = np.sum(x_vals * y_vals)
+    denominator_x = np.sum(x_vals ** 2)
+    denominator_y = np.sum(y_vals ** 2)
     return numerator / sqrt(denominator_x * denominator_y)
 
 # Finds the mean in a list of numbers
@@ -52,7 +76,4 @@ def find_r(x_values, y_values):
 # Return: returns the average of all of the numbers in values
 # Postcondition: Returned value must be a numeric value
 def find_mean(values):
-    sum = 0
-    for value in values:
-        sum += value
-    return sum / len(values)
+    return np.sum(values) / len(values)
